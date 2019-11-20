@@ -3,7 +3,10 @@ import requests
 import socket
 import threading
 import logging
-
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17,GPIO.OUT)
 # change this to the values from MCS web console
 DEVICE_INFO = {
     'device_id' : 'DyC3n5DY',
@@ -64,7 +67,7 @@ def waitAndExecuteCommand(commandChannel):
 def setLED(state):
     # Note the LED is "reversed" to the pin's GPIO status.
     # So we reverse it here.
-    print('HI')
+    LED=GPIO.output(17,state)
 if __name__ == '__main__':
     channel = establishCommandChannel()
     waitAndExecuteCommand(channel)

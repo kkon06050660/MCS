@@ -3,11 +3,13 @@ import requests
 import socket
 import threading
 import logging
-import mraa
-
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17,GPIO.OUT)
 # change this to the values from MCS web console
 DEVICE_INFO = {
-    'device_id'  : 'DyC3n5DY',
+    'device_id' : 'DyC3n5DY',
     'device_key' : '2jfe4RaoWBCOdwkv'
 }
 
@@ -33,6 +35,7 @@ def establishCommandChannel():
     # Heartbeat for command server to keep the channel alive
     def sendHeartBeat(commandChannel):
         keepAliveMessage = '%(device_id)s,%(device_key)s,0' % DEVICE_INFO
+        keepAliveMessage = keepAliveMessage.encode(encoding="utf-8")
         commandChannel.sendall(keepAliveMessage)
         logging.info("beat:%s" % keepAliveMessage)
 
@@ -47,7 +50,7 @@ def establishCommandChannel():
 
 def waitAndExecuteCommand(commandChannel):
     while True:
-        command = commandChannel.recv(1024)
+        command = commandChannel.recv(1024).decode(encoding="utf-8")
         logging.info("recv:" + command)
         # command can be a response of heart beat or an update of the LED_control,
         # so we split by ',' and drop device id and device key and check length
@@ -55,28 +58,16 @@ def waitAndExecuteCommand(commandChannel):
 
         if len(fields) > 1:
             timeStamp, dataChannelId, commandString = fields
-            if dataChannelId == 'LED_Control':
+            if dataChannelId == 'LEDControl':
                 # check the value - it's either 0 or 1
                 commandValue = int(commandString)
                 logging.info("led :%d" % commandValue)
                 setLED(commandValue)
 
-pin = None
-def setupLED():
-    global pin
-    # on LinkIt Smart 7699, pin 44 is the Wi-Fi LED.
-    pin = mraa.Gpio(44)
-    pin.dir(mraa.DIR_OUT)
-
 def setLED(state):
     # Note the LED is "reversed" to the pin's GPIO status.
     # So we reverse it here.
-    if state:
-        pin.write(0)
-    else:
-        pin.write(1)
-
+    LED=GPIO.output(17,state)
 if __name__ == '__main__':
-    setupLED()
     channel = establishCommandChannel()
     waitAndExecuteCommand(channel)

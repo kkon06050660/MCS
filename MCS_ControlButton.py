@@ -59,7 +59,7 @@ def establishCommandChannel():
         sendHeartBeat(commandChannel)
         # Re-start the timer periodically
         global heartBeatTask
-        heartBeatTask = threading.Timer(40, heartBeat, [commandChannel]).start()
+        heartBeatTask = threading.Timer(10, heartBeat, [commandChannel]).start()
 
     heartBeat(s)
     return s
@@ -125,8 +125,10 @@ while True:
 	SwitchStatus=GPIO.input(24)
 	if(SwitchStatus==0):
 		print('Button pressed')
+		SwitchStatus=1
 	else:
 		print('Button released')
+		SwitchStatus=0
 	payload = {"datapoints":[{"dataChnId":"Humidity","values":{"value":h0}},
 			{"dataChnId":"Temperature","values":{"value":t0}}]}
 	post_to_mcs(payload)
@@ -137,4 +139,4 @@ while True:
 
 	waitAndExecuteCommand(channel)
 
-	time.sleep(10)
+#	time.sleep(1)

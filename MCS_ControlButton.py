@@ -16,8 +16,12 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(24,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.setup(17,GPIO.OUT)
 
-#GPIO.setup(27,GPIO.OUT)
-#LED=GPIO.output(27,GPIO.HIGH)
+
+#sudo ./MCS_ControlButton.py 11 4
+#DHT11  ->  3.3v GPIO-4 ground
+#Switch ->  GPIO-24 ground
+#Led    ->  GPIO-17 ground
+
 
 # change this to the values from MCS web console
 DEVICE_INFO = {

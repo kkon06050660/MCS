@@ -33,8 +33,10 @@ while True:
 	
 	SwitchStatus=GPIO.input(24)
 	if(SwitchStatus==0):
+		SwitchStatus=1
 		print('Button pressed')
 	else:
+		SwitchStatus=0
 		print('Button released')
 	
 	payload = {"datapoints":[{"dataChnId":"Switch","values":{"value":SwitchStatus}}]}

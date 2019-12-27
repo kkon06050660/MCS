@@ -11,7 +11,9 @@ deviceKey = "2jfe4RaoWBCOdwkv"
 GPIO.setmode(GPIO.BCM)
 #GPIO.setup(24,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
-#執行時輸入 sudo ./mcsio.py 11 4
+#sudo ./mcsDHT.py 11 4
+#DHT11  ->  3.3v GPIO-4 ground
+#Switch ->  GPIO-24 ground
 
 def post_to_mcs(payload): 
 	headers = {"Content-type": "application/json", "deviceKey": deviceKey} 
@@ -65,4 +67,3 @@ while True:
 	#		{"dataChnId":"SwitchStatus2","values":{"value":SwitchStatus}}]}
 	#post_to_mcs(payload)
 	time.sleep(10)
-
